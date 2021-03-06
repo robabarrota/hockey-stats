@@ -1,0 +1,13 @@
+{
+    "numberOfGamesWeight":          0.7,
+    "numberOfGoalsWeight":          1.5,
+    "shotPercentageWeight":         0.05,
+    "powerPlayGoalsWeight":         0.3,
+    "goalsPerGameWeight":           1.2,
+    "opposingGAAWeight":            0.3,
+
+    
+    "opposingPKPercWeight":         0.04,
+    "opposingPKFrequencyWeight":    0.04,
+    "numberOfShotsWeight":          0.05
+}
