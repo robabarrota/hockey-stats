@@ -4,11 +4,11 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prod --base-href 'https://robabarrota.github.io/hockey-stats/'",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "deploy": "git subtree push --prefix dist/hockey-stats origin gh-pages"
+    "deploy": "npx angular-cli-ghpages --dir=dist/hockey-stats"
   },
   "private": true,
   "dependencies": {
