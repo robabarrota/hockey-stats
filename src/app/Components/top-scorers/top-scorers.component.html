@@ -7,76 +7,14 @@
   <!-- <button class="btn btn-outline-light header-item" (click)="orderPlayers()">Order Players</button> -->
   
   <button class="btn btn-outline-light header-item" (click)="runTheNumbers()">Run the numbers</button>
-  <mat-form-field [color]="accent" class="header-item">
+  <mat-form-field class="header-item">
     <input matInput class="header-item" (keyup)="applyFilter($event.target.value)" placeholder="Filter">
   </mat-form-field>
   <mat-spinner class="header-item" *ngIf="loading" [diameter]="30"></mat-spinner>
 </div>
 
-<!-- <mat-expansion-panel hideToggle class="statistics-panel">
-  <mat-expansion-panel-header>
-    <mat-panel-title class="text-light">
-      Statistics
-    </mat-panel-title>
-    <mat-panel-description class="text-light">
-      Used for normalization
-    </mat-panel-description>
-  </mat-expansion-panel-header>
-  <mat-accordion class="accordion accordion-flush" multi>
-    <mat-expansion-panel hideToggle class="sub-statistics-panel">
-      <mat-expansion-panel-header>
-        <mat-panel-title class="text-light">
-          Top Player Stats
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <div class="text-light">
-        <div>Goals: {{ topPlayerStats.goals }}</div>
-        <div>Games: {{ topPlayerStats.games }}</div>
-        <div>PowerPlay Goals: {{ topPlayerStats.powerPlayGoals }}</div>
-        <div>Goals Per Game: {{ topPlayerStats.goalsPerGame }}</div>
-      </div>
-    </mat-expansion-panel>
-    <mat-expansion-panel hideToggle class="sub-statistics-panel">
-      <mat-expansion-panel-header>
-        <mat-panel-title class="text-light">
-          Worst Player Stats
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <div class="text-light">
-        <div>Goals: {{ worstPlayerStats.goals }}</div>
-        <div>Games: {{ worstPlayerStats.games }}</div>
-        <div>PowerPlay Goals: {{ worstPlayerStats.powerPlayGoals }}</div>
-        <div>Goals Per Game: {{ worstPlayerStats.goalsPerGame }}</div>
-      </div>
-    </mat-expansion-panel>
-    <mat-expansion-panel hideToggle class="sub-statistics-panel">
-      <mat-expansion-panel-header>
-        <mat-panel-title class="text-light">
-          Top Team Stats
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <div class="text-light">
-        <div>penaltyKillOpportunities: {{ topTeamStats.penaltyKillFrequency }}</div>
-        <div>penaltyKillPercentage: {{ topTeamStats.penaltyKillPercentage }}</div>
-        <div>goalsAgainstPerGame: {{ topTeamStats.goalsAgainstPerGame }}</div>
-      </div>
-    </mat-expansion-panel>
-    <mat-expansion-panel hideToggle class="sub-statistics-panel">
-      <mat-expansion-panel-header>
-        <mat-panel-title class="text-light">
-          Worst Team Stats
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <div class="text-light">
-        <div>penaltyKillOpportunities: {{ worstTeamStats.penaltyKillFrequency }}</div>
-        <div>penaltyKillPercentage: {{ worstTeamStats.penaltyKillPercentage }}</div>
-        <div>goalsAgainstPerGame: {{ worstTeamStats.goalsAgainstPerGame }}</div>
-      </div>
-    </mat-expansion-panel>
-  </mat-accordion>
-</mat-expansion-panel> -->
 
-<mat-table *ngIf="loaded" id="prediction-data" [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+<mat-table *ngIf="loaded" id="prediction-data" [dataSource]="dataSource" matSort multiTemplateDataRows (matSortChange)="sortData($event)">
   <ng-container matColumnDef="rank">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Overall Ranking </mat-header-cell>
     <mat-cell *matCellDef="let element;"> {{element.rank}} </mat-cell>
@@ -97,6 +35,20 @@
     <mat-cell *matCellDef="let element;"> {{element.goalLikelihoodRank}} </mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="expandedDetail">
+    <mat-cell *matCellDef="let element;" [attr.colspan]="displayedColumns.length">
+      <div class="expanded-element-detail"
+           [@detailExpand]="element.name == expandedElement?.name ? 'expanded' : 'collapsed'">
+           <expanded-details [player]="element"></expanded-details>
+      </div>
+    </mat-cell>
+  </ng-container>
+
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  <mat-row *matRowDef="let element; let i = dataIndex; columns: displayedColumns;" 
+      matRipple
+      [ngClass]="{'element-row': true, 'alt-row': i % 2 == 0}"
+      [class.expanded-row]="expandedElement?.name === element.name"
+      (click)="expandedElement = expandedElement?.name === element.name ? null : element"></mat-row>
+  <mat-row *matRowDef="let element; columns: ['expandedDetail'];" class="detail-row"></mat-row>
 </mat-table>

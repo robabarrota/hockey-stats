@@ -7,11 +7,13 @@ import { TopScorersComponent } from './Components/top-scorers/top-scorers.compon
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { AppMaterialModule } from './app-material/app-material.module';
+import { ExpandedDetailsComponent } from './Components/expanded-details/expanded-details.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TopScorersComponent
+    TopScorersComponent,
+    ExpandedDetailsComponent
   ],
   imports: [
     BrowserModule,

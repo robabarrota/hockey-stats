@@ -12,11 +12,19 @@ import * as XLSX from 'xlsx';
 import { formatDate } from '@angular/common';
 import { TeamStat } from 'src/app/Models/TeamStat';
 import { MatTableDataSource, Sort } from '@angular/material';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
-  selector: 'app-top-scorers',
+  selector: 'top-scorers',
   templateUrl: './top-scorers.component.html',
-  styleUrls: ['./top-scorers.component.scss']
+  styleUrls: ['./top-scorers.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ]
 })
 export class TopScorersComponent implements OnInit {
   orderedPlayers: Player[] = [];
@@ -27,14 +35,15 @@ export class TopScorersComponent implements OnInit {
   maxTeamRank: number = 31;
   minRank: number = 1;
   games: Game[] = [];
-  topPlayerStats: PlayerStat = new PlayerStat();
-  worstPlayerStats: PlayerStat = new PlayerStat();
+  topPlayerStats: any;
+  worstPlayerStats: any;
   topTeamStats: TeamStat = new TeamStat();
   worstTeamStats: TeamStat = new TeamStat();
   loading = false;
   loaded = false;
   displayedColumns = ["rank", "player", "team", "score"];
   dataSource: MatTableDataSource<Player> = new MatTableDataSource(this.orderedPlayers);
+  expandedElement: Player | null;
   
   constructor(private playerService: PlayerService, private teamService: TeamService) { }
 
@@ -152,7 +161,7 @@ export class TopScorersComponent implements OnInit {
         var player: Player = {
           id: playerId,
           name: playerName,
-          seasonStats: playerSeasonStat,
+          seasonStats: { ...playerSeasonStat, goalsPerGame: playerSeasonStat.games > 0 ? +(playerSeasonStat.goals / playerSeasonStat.games).toFixed(3) : 0},
           //playoffStats: playerPlayoffStat,
           goalLikelihoodRank: -1,
           playingAgainst: opposingTeam,

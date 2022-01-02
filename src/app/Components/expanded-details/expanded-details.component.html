@@ -1,0 +1,18 @@
+<div>
+    <mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="key">
+            <mat-cell *matCellDef="let element;"> {{element.key}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="value">
+            <mat-cell *matCellDef="let element;"> {{element.value}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="header-row-second-group">
+            <mat-header-cell *matHeaderCellDef [attr.colspan]="2"> Season Stats </mat-header-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="['header-row-second-group']"></mat-header-row>
+        <mat-row *matRowDef="let element; columns: seasonStatColumns;"></mat-row>
+    </mat-table>
+</div>

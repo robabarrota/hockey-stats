@@ -15,11 +15,6 @@
     background-color: #fb776c;
 }
 
-th, ::ng-deep td {
-    font-weight: normal;
-    padding: 2px 15px;
-}
-
 .header-wrapper {
     display: flex;
     align-items: center;
@@ -30,12 +25,8 @@ th, ::ng-deep td {
     margin: 5px;
 }
 
-.mat-row:nth-child(even){
+.alt-row {
     background-color: #e4f0ec;
-}
-
-.mat-row:nth-child(odd){
-    background-color:#ffffff;
 }
 
 ::ng-deep .mat-focused .mat-form-field-label {
@@ -55,4 +46,31 @@ th, ::ng-deep td {
 
 ::ng-deep .mat-form-field-label{
     color:white !important;
+}
+
+.detail-row {
+    min-height: 0;
+    background-color: #91a6a5;
+    border-radius: 0px 0px 2px 2px;
+}
+
+.element-row:not(.expanded-row):hover {
+    background: #777;
+}
+  
+.element-row:not(.expanded-row):active {
+    background: #efefef;
+}
+
+.element-row {
+    border-bottom-width: 0;
+}
+
+.expanded-element-detail {
+    overflow: hidden;
+    display: flex;
+}
+
+.expanded-details {
+    padding: 5px;
 }

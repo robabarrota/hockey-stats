@@ -1,6 +1,30 @@
 export class PlayerStat {
+    timeOnIce?: string;
+    assists?: number;
     goals: number;
+    pim?: string;
+    shots?: string;
     games: number;
+    hits?: string;
     powerPlayGoals: number;
+    powerPlayPoints?: string;
+    powerPlayTimeOnIce?: string;
+    evenTimeOnIce?: string;
+    penaltyMinutes?: string;
+    faceOffPct?: string;
+    shotPct?: string;
+    gameWinningGoals?: string;
+    overTimeGoals?: string;
+    shortHandedGoals?: string;
+    shortHandedPoints?: string;
+    shortHandedTimeOnIce?: string;
+    blocked?: string;
+    plusMinus?: string;
+    points?: string;
+    shifts?: string;
+    timeOnIcePerGame?: string;
+    evenTimeOnIcePerGame?: string;
+    shortHandedTimeOnIcePerGame?: string;
+    powerPlayTimeOnIcePerGame?: string;
     goalsPerGame: number;
 }
