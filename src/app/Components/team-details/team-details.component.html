@@ -1,1 +1,21 @@
-<p>team-details works!</p>
+<mat-table [dataSource]="dataSource" style="width: 100%">
+    <ng-container matColumnDef="key">
+        <mat-cell *matCellDef="let element;"> {{element.key}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="value">
+        <mat-cell *matCellDef="let element;"> {{element.value}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="header-row-title">
+        <mat-header-cell *matHeaderCellDef [attr.colspan]="2"> Opposing Team Stats</mat-header-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="header-row-subtitle">
+        <mat-header-cell *matHeaderCellDef [attr.colspan]="2"> {{team.name}}</mat-header-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="['header-row-title']"></mat-header-row>
+    <mat-header-row *matHeaderRowDef="['header-row-subtitle']"></mat-header-row>
+    <mat-row *matRowDef="let element; columns: teamStatColumns;"></mat-row>
+</mat-table>

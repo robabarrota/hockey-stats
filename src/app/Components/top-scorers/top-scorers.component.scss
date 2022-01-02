@@ -69,8 +69,12 @@
 .expanded-element-detail {
     overflow: hidden;
     display: flex;
+    width: 100%;
+    justify-content: space-between;
 }
 
-.expanded-details {
+.details-table {
+    width: 40%;
     padding: 5px;
 }
+

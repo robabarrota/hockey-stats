@@ -9,5 +9,5 @@ export class Player {
     //playoffStats: PlayerStat;
     playingAgainst: Team;
     goalLikelihoodRank: number;
-    playsFor: Team;
+    playingFor: Team;
 }

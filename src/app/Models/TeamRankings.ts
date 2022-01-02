@@ -1,5 +1,30 @@
 export class TeamRankings {
-    goalsAgainstPerGame: string;
-    penaltyKillOpportunities: string;
-    penaltyKillPercentage: string;
+    wins?: string;
+    losses?: string;
+    ot?: string;
+    pts?: string;
+    ptPctg?: string;
+    goalsPerGame?: string;
+    goalsAgainstPerGame?: string;
+    evGGARatio?: string;
+    powerPlayPercentage?: string;
+    powerPlayGoals?: string;
+    powerPlayGoalsAgainst?: string;
+    powerPlayOpportunities?: string;
+    penaltyKillOpportunities?: string;
+    penaltyKillPercentage?: string;
+    shotsPerGame?: string;
+    shotsAllowed?: string;
+    winScoreFirst?: string;
+    winOppScoreFirst?: string;
+    winLeadFirstPer?: string;
+    winLeadSecondPer?: string;
+    winOutshootOpp?: string;
+    winOutshotByOpp?: string;
+    faceOffsTaken?: string;
+    faceOffsWon?: string;
+    faceOffsLost?: string;
+    faceOffWinPercentage?: string;
+    savePctRank?: string;
+    shootingPctRank?: string;
 }

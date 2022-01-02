@@ -50,13 +50,11 @@ export class TopScorersComponent implements OnInit {
   ngOnInit() {
     this.weightedStats = weightedStatsJson;
     this.worstTeamStats = {
-      penaltyKillFrequency: 0,
       penaltyKillPercentage: 0,
       goalsAgainstPerGame: 0,
       gamesPlayed: 0
     };
     this.topTeamStats = {
-      penaltyKillFrequency: 99999,
       penaltyKillPercentage: 99999,
       goalsAgainstPerGame: 99999,
       gamesPlayed: 99999
@@ -85,7 +83,7 @@ export class TopScorersComponent implements OnInit {
     this.dataSource.filterPredicate = (data, filter: string) => {
       var formattedFilter = filter.toLowerCase().trim();
       var name = data.name.toLowerCase().trim();
-      var team = data.playsFor.name.toLowerCase().trim();
+      var team = data.playingFor.name.toLowerCase().trim();
       var rank = data.rank.toString();
       return name.includes(formattedFilter) || rank.includes(formattedFilter) || team.includes(formattedFilter)
     };
@@ -142,12 +140,13 @@ export class TopScorersComponent implements OnInit {
     await Promise.all(teams.map(async team => {
       var thisGame = this.games.filter((game) => game.homeTeam.id === team.id || game.awayTeam.id === team.id)[0];
       var opposingTeam : Team = thisGame.homeTeam.id === team.id ? thisGame.awayTeam : thisGame.homeTeam;
+      var {stats, rankings} = this.teams.find(team => team.id == team.id);
       var roster: Roster = {
         team: {
           id: team.id,
           name: team.name,
-          rankings: null,
-          stats: null
+          rankings: rankings,
+          stats: stats
         },
         players: []
       };
@@ -166,7 +165,7 @@ export class TopScorersComponent implements OnInit {
           //playoffStats: playerPlayoffStat,
           goalLikelihoodRank: -1,
           playingAgainst: opposingTeam,
-          playsFor: team,
+          playingFor: roster.team,
           rank: 0
         };
         await this.calculateGoalLikelihood(player);
@@ -359,16 +358,9 @@ export class TopScorersComponent implements OnInit {
     }))
 
     allTeamsObjs.forEach(teamObj => {
-      var pkopsRank : string = teamObj.teamStats[0].splits[1].stat.penaltyKillOpportunities;
       var pkperc : number  = teamObj.teamStats[0].splits[0].stat.penaltyKillPercentage;
       var gaa : number  = teamObj.teamStats[0].splits[0].stat.goalsAgainstPerGame;
       var gamesPlayed: number = teamObj.teamStats[0].splits[0].stat.gamesPlayed;
-      var pkfreq = this.rankingStringToNumber(pkopsRank) / gamesPlayed;
-      if (pkfreq < this.topTeamStats.penaltyKillFrequency) {
-        this.topTeamStats.penaltyKillFrequency = pkfreq;
-      } else if (pkfreq > this.worstTeamStats.penaltyKillFrequency) {
-        this.worstTeamStats.penaltyKillFrequency = pkfreq;
-      }
 
       if (pkperc < this.topTeamStats.penaltyKillPercentage) {
         this.topTeamStats.penaltyKillPercentage = pkperc
@@ -402,7 +394,7 @@ export class TopScorersComponent implements OnInit {
       switch (sort.active) {
         case 'rank': return compare(a.rank, b.rank, isAsc);
         case 'player': return compare(a.name, b.name, isAsc);
-        case 'team': return compare(a.playsFor.name, b.playsFor.name, isAsc);
+        case 'team': return compare(a.playingFor.name, b.playingFor.name, isAsc);
         case 'score': return compare(a.goalLikelihoodRank, b.goalLikelihoodRank, isAsc);
         default: return 0;
       }

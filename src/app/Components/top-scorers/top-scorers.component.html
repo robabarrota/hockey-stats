@@ -25,7 +25,7 @@
 
   <ng-container matColumnDef="team">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Team </mat-header-cell>
-    <mat-cell *matCellDef="let element;"> {{element.playsFor.name}} </mat-cell>
+    <mat-cell *matCellDef="let element;"> {{element.playingFor.name}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="score">
@@ -37,7 +37,8 @@
     <mat-cell *matCellDef="let element;" [attr.colspan]="displayedColumns.length">
       <div class="expanded-element-detail"
            [@detailExpand]="element.name == expandedElement?.name ? 'expanded' : 'collapsed'">
-           <player-details [player]="element"></player-details>
+           <player-details class="details-table" [player]="element"></player-details>
+           <team-details class="details-table" [team]="element.playingAgainst"></team-details>
       </div>
     </mat-cell>
   </ng-container>
