@@ -17,24 +17,24 @@ export class TeamService {
     this.apiVersion = appsettingsJson.apiVersion;
   }
 
-  playingTeams() : Observable<any> {
+  playingTeams() : Promise<any> {
     //https://statsapi.web.nhl.com/api/v1/schedule
     var todaysDate = formatDate(new Date(), 'yyyy-MM-dd', 'en');
     var requestUrl = this.baseApiUrl + this.apiVersion + "schedule?startDate=" + todaysDate + "&endDate=" + todaysDate;
-    var result = this.http.get(requestUrl);
+    var result = this.http.get(requestUrl).toPromise();
     return result;
   }
 
-  getTeamStats(teamId: number) : Observable<any> {
+  getTeamStats(teamId: number) : Promise<any> {
     var requestUrl = this.baseApiUrl + this.apiVersion + "teams/" + teamId + "/stats";
-    var result = this.http.get(requestUrl);
+    var result = this.http.get(requestUrl).toPromise();
     return result;
   }
 
-  getAllTeams() : Observable<any> {
+  getAllTeams() : Promise<any> {
     "https://statsapi.web.nhl.com/api/v1/teams?expand=team.stats"
     var requestUrl = this.baseApiUrl + this.apiVersion + "teams?expand=team.stats";
-    var result = this.http.get(requestUrl);
+    var result = this.http.get(requestUrl).toPromise();
     return result;
   }
 }

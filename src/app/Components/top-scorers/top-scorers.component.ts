@@ -69,12 +69,13 @@ export class TopScorersComponent implements OnInit {
   
   getRosters() {
     this.clearAll();
-    var schedule: any;
-    this.teamService.playingTeams().subscribe((scheduleObs: any) => schedule = scheduleObs, () => {}, () => {
+    this.loadingRosters = true;
+    this.teamService.playingTeams().then((schedule) => {
       this.loadTodaysTeams(schedule.dates[0].games);
       this.loadTeamStatsAndRankings();
       this.loadRosters();
-    });
+      this.loadingRosters = false;
+    })
   }
 
   loadTodaysTeams(games) {
@@ -108,8 +109,7 @@ export class TopScorersComponent implements OnInit {
     this.teams.forEach(function (team) {
       teamIds.push(team.id);
     })
-    var rostersResponse;
-    this.playerService.getRosters(teamIds).subscribe((rostersObs: any) => rostersResponse = rostersObs, () => {}, () => {
+    this.playerService.getRosters(teamIds).then((rostersResponse) => {
       var rosters: Roster[] = [];
       var teams : any[] = rostersResponse.teams;
       teams.forEach(team => {
@@ -128,10 +128,9 @@ export class TopScorersComponent implements OnInit {
         teamRoster.forEach(rosterSpot => {
           var playerId = rosterSpot.person.id;
           var playerName = rosterSpot.person.fullName;
-          var playerSeasonStatsresp, playerPlayoffStatsresp;
-          this.playerService.getPlayerSeasonStats(playerId).subscribe((playerSeasonStatsResponse: any) => playerSeasonStatsresp = playerSeasonStatsResponse, () => {}, () => {
+          this.playerService.getPlayerSeasonStats(playerId).then((playerSeasonStatsresp) => {
             var playerSeasonStat: PlayerStat = playerSeasonStatsresp.stats[0].splits.length === 0 ? new PlayerStat() : playerSeasonStatsresp.stats[0].splits[0].stat;
-            this.playerService.getPlayerPlayoffStats(playerId).subscribe((playerPlayoffStatsResponse: any) => playerPlayoffStatsresp = playerPlayoffStatsResponse, () => {}, () => {
+            this.playerService.getPlayerPlayoffStats(playerId).then((playerPlayoffStatsresp) => {
               var playerPlayoffStat: PlayerStat = playerPlayoffStatsresp.stats[0].splits.length === 0 ? new PlayerStat() : playerPlayoffStatsresp.stats[0].splits[0].stat;
               var player: Player = {
                 id: playerId,
@@ -177,12 +176,10 @@ export class TopScorersComponent implements OnInit {
   calculateGoalLikelihood(player: Player) {
     var playerSeasonStatsResp, playerPlayoffStatsResp;
     
-    this.playerService.getPlayerSeasonStats(player.id).subscribe((playerSeasonStatsResponse: any) => playerSeasonStatsResp = playerSeasonStatsResponse, () => {}, () => {
-      this.playerService.getPlayerPlayoffStats(player.id).subscribe((playerPlayoffStatsResponse: any) => playerPlayoffStatsResp = playerPlayoffStatsResponse, () => {}, () => {
-        console.log("here");
+    this.playerService.getPlayerSeasonStats(player.id).then((playerSeasonStatsResp) => {
+      this.playerService.getPlayerPlayoffStats(player.id).then((playerPlayoffStatsResp) => {
         // if (playerSeasonStatsResp.stats[0].splits[0] !== undefined && playerPlayoffStatsResp.stats[0].splits[0] !== undefined) {
         if (playerSeasonStatsResp.stats[0].splits[0] !== undefined) {
-          console.log("there");
           var playerSeasonStats = playerSeasonStatsResp.stats[0].splits[0].stat;
           //var playerPlayoffStats = playerPlayoffStatsResp.stats[0].splits[0].stat;
           // var playerTotalGoals = playerSeasonStats.goals || 0 + playerPlayoffStats.goals || 0 ;
@@ -273,8 +270,7 @@ export class TopScorersComponent implements OnInit {
 
   loadTeamStatsAndRankings() {
     this.teams.forEach(team => {
-      var teamStatsResp;
-      this.teamService.getTeamStats(team.id).subscribe((teamStatsObs: any) => teamStatsResp = teamStatsObs, () => {}, () => { 
+      this.teamService.getTeamStats(team.id).then((teamStatsResp) => { 
         var teamRankings = teamStatsResp.stats[1].splits[0].stat;
         var teamStats = teamStatsResp.stats[0].splits[0].stat;
         team.rankings = teamRankings;
@@ -288,8 +284,7 @@ export class TopScorersComponent implements OnInit {
   //----------------------------------------------------
 
   loadGames() {
-    var schedule: any;
-    this.teamService.playingTeams().subscribe((scheduleObs: any) => schedule = scheduleObs, () => {}, () => {
+    this.teamService.playingTeams().then((schedule) => {
       this.loadTodaysTeams(schedule.dates[0].games);
       this.loadRosters();
     });
@@ -310,21 +305,19 @@ export class TopScorersComponent implements OnInit {
   }
 
   getMaxMinData() {
-    var allTeamsResp;
-    this.teamService.getAllTeams().subscribe((allTeamsObs: any) => allTeamsResp = allTeamsObs, () => {}, () => {
+    this.loadingStatistics = true;
+    this.teamService.getAllTeams().then((allTeamsResp) => {
       var allTeamsObjs = allTeamsResp.teams;
 
       var teamIds = allTeamsObjs.map(team => team.id);
-        var rostersResponse;
-        this.playerService.getRosters(teamIds).subscribe((rostersObs: any) => rostersResponse = rostersObs, () => {}, () => { 
+        this.playerService.getRosters(teamIds).then((rostersResponse) => { 
           var teams : any[] = rostersResponse.teams;
           teams.forEach(team => {
             var teamRoster = team.roster.roster;
             teamRoster.forEach(rosterSpot => {
               var playerId = rosterSpot.person.id;
-              var playerSeasonStatsresp, playerPlayoffStatsresp;
-              this.playerService.getPlayerSeasonStats(playerId).subscribe((playerSeasonStatsResponse: any) => playerSeasonStatsresp = playerSeasonStatsResponse, () => {}, () => {
-                this.playerService.getPlayerPlayoffStats(playerId).subscribe((playerPlayoffStatsResponse: any) => playerPlayoffStatsresp = playerPlayoffStatsResponse, () => {}, () => {
+              this.playerService.getPlayerSeasonStats(playerId).then((playerSeasonStatsresp) => {
+                this.playerService.getPlayerPlayoffStats(playerId).then((playerPlayoffStatsresp) => {
                   var playerSeasonStat: PlayerStat = playerSeasonStatsresp.stats[0].splits.length === 0 ? new PlayerStat() : playerSeasonStatsresp.stats[0].splits[0].stat;
                   var playerPlayoffStat: PlayerStat = playerPlayoffStatsresp.stats[0].splits.length === 0 ? new PlayerStat() : playerPlayoffStatsresp.stats[0].splits[0].stat;
 
@@ -397,6 +390,6 @@ export class TopScorersComponent implements OnInit {
         }
       });
       this.loadingStatistics = false;
-    });
+    }).finally(() => this.loadingStatistics = false);
   }
 }
