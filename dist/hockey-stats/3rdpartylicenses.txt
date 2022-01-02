@@ -87,7 +87,7 @@ THE SOFTWARE.
 
 @angular/material/form-field
 
-@angular/material/progress-spinner
+@angular/material/progress-bar
 
 @angular/material/sort
 
