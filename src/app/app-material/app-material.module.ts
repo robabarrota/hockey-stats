@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatExpansionModule, MatProgressSpinnerModule } from '@angular/material';
-
+import { MatExpansionModule, MatProgressSpinnerModule, MatTableModule, MatSortModule} from '@angular/material';
 
 
 @NgModule({
@@ -9,8 +8,10 @@ import { MatExpansionModule, MatProgressSpinnerModule } from '@angular/material'
   imports: [
     MatExpansionModule,
     MatProgressSpinnerModule,
+    MatTableModule,
+    MatSortModule,
     CommonModule
   ],
-  exports: [MatExpansionModule, MatProgressSpinnerModule]
+  exports: [MatExpansionModule, MatProgressSpinnerModule, MatTableModule, MatSortModule]
 })
 export class AppMaterialModule { }

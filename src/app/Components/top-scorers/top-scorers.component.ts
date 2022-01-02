@@ -11,6 +11,7 @@ import weightedStatsJson from '../../../assets/weightedStats.json';
 import * as XLSX from 'xlsx'; 
 import { formatDate } from '@angular/common';
 import { TeamStat } from 'src/app/Models/TeamStat';
+import { MatTableDataSource, Sort } from '@angular/material';
 
 @Component({
   selector: 'app-top-scorers',
@@ -32,7 +33,9 @@ export class TopScorersComponent implements OnInit {
   worstTeamStats: TeamStat = new TeamStat();
   loading = false;
   loaded = false;
-
+  displayedColumns = ["rank", "player", "team", "score"];
+  dataSource: MatTableDataSource<Player> = new MatTableDataSource(this.orderedPlayers);
+  
   constructor(private playerService: PlayerService, private teamService: TeamService) { }
 
   ngOnInit() {
@@ -68,6 +71,7 @@ export class TopScorersComponent implements OnInit {
     await this.getMaxMinData();
     await this.getRosters();
     this.orderPlayers();
+    this.dataSource.data = this.orderedPlayers;
     this.loading = false;
     this.loaded = true;
   }
@@ -145,7 +149,8 @@ export class TopScorersComponent implements OnInit {
           //playoffStats: playerPlayoffStat,
           goalLikelihoodRank: -1,
           playingAgainst: opposingTeam,
-          playsFor: team
+          playsFor: team,
+          rank: 0
         };
         await this.calculateGoalLikelihood(player);
         roster.players.push(player);
@@ -165,6 +170,7 @@ export class TopScorersComponent implements OnInit {
 
   orderPlayers() {
     this.orderedPlayers.sort((a,b) => b.goalLikelihoodRank - a.goalLikelihoodRank);
+    this.orderedPlayers.map((player, index) => player.rank = index + 1); 
   }
 
   getGoalsPerGame(stats: PlayerStat): number {
@@ -366,4 +372,27 @@ export class TopScorersComponent implements OnInit {
       }
     });
   }
+
+  sortData(sort: Sort) {
+    const data = this.orderedPlayers.slice();
+    if (!sort.active || sort.direction === '') {
+      this.dataSource.data = data;
+      return;
+    }
+
+    this.dataSource.data = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      switch (sort.active) {
+        case 'rank': return compare(a.rank, b.rank, isAsc);
+        case 'player': return compare(a.name, b.name, isAsc);
+        case 'team': return compare(a.playsFor.name, b.playsFor.name, isAsc);
+        case 'score': return compare(a.goalLikelihoodRank, b.goalLikelihoodRank, isAsc);
+        default: return 0;
+      }
+    });
+  }
+}
+
+function compare(a: number | string, b: number | string, isAsc: boolean) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

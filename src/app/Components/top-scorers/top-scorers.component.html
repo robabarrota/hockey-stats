@@ -73,19 +73,27 @@
   </mat-accordion>
 </mat-expansion-panel> -->
 
-<table *ngIf="loaded" id="prediction-data">
-  <tr>
-    <th>Overall Ranking</th>
-    <th>Player</th>
-    <th>Team</th>
-    <th>Score</th>
-    <th>PlayerId</th>
-  </tr>
-  <tr *ngFor="let player of orderedPlayers; let i = index">
-    <td>{{ i + 1 }}</td>
-    <td>{{ player.name }}</td>
-    <td>{{ player.playsFor.name }}</td>
-    <td>{{ player.goalLikelihoodRank }}</td>
-    <td>{{ player.id }}</td>
-  </tr>
-</table>
+<mat-table *ngIf="loaded" id="prediction-data" [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+  <ng-container matColumnDef="rank">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Overall Ranking </mat-header-cell>
+    <mat-cell *matCellDef="let element;"> {{element.rank}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="player">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Player </mat-header-cell>
+    <mat-cell *matCellDef="let element;"> {{element.name}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="team">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Team </mat-header-cell>
+    <mat-cell *matCellDef="let element;"> {{element.playsFor.name}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="score">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Score </mat-header-cell>
+    <mat-cell *matCellDef="let element;"> {{element.goalLikelihoodRank}} </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
