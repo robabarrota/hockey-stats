@@ -4,7 +4,7 @@
     "shotPercentageWeight":         0.05,
     "powerPlayGoalsWeight":         0.3,
     "goalsPerGameWeight":           1.2,
-    "opposingGAAWeight":            0.3,
+    "opposingGAAWeight":            0.2,
 
     
     "opposingPKPercWeight":         0.04,

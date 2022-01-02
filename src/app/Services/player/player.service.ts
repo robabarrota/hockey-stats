@@ -24,14 +24,20 @@ export class PlayerService {
     return result;
   }
 
-  getPlayerStats(playerId: number) : Observable<any> {
-    var requestUrl = this.baseApiUrl + this.apiVersion + "people/" + playerId + "/stats?stats=statsSingleSeason&season=20202021";
+  getPlayerSeasonStats(playerId: number) : Observable<any> {
+    var requestUrl = this.baseApiUrl + this.apiVersion + "people/" + playerId + "/stats?stats=statsSingleSeason&season=20212022";
+    var result = this.http.get(requestUrl);
+    return result;
+  }
+
+  getPlayerPlayoffStats(playerId: number) : Observable<any> {
+    var requestUrl = this.baseApiUrl + this.apiVersion + "people/" + playerId + "/stats?stats=statsSingleSeasonPlayoffs&season=20212022";
     var result = this.http.get(requestUrl);
     return result;
   }
 
   getPlayerRankings(playerId: number): Observable<any> {
-    var requestUrl = this.baseApiUrl + this.apiVersion + "people/" + playerId + "/stats?stats=regularSeasonStatRankings&season=20202021";
+    var requestUrl = this.baseApiUrl + this.apiVersion + "people/" + playerId + "/stats?stats=regularSeasonStatRankings&season=20212022";
     var result = this.http.get(requestUrl);
     return result;
   }

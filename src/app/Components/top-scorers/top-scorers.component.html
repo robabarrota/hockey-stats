@@ -1,41 +1,84 @@
-<button (click)="exportToExcel()">Export</button>
-<button (click)="clearAll()">Clear</button>
-<button [ngClass]="{'loaded': statisticsLoaded}" (click)="getMaxMinData()">Load Statistics</button>
-<button (click)="todaysPlayers()">Load Rosters</button>
-<button (click)="orderPlayers()">Order Players</button>
+<button class="btn btn-outline-light"(click)="exportToExcel()">Export</button>
+<button class="btn btn-outline-light" type="button" (click)="clearAll()">Clear</button>
+<button class="btn btn-outline-light" (click)="getMaxMinData()">Load Statistics</button>
+<button class="btn btn-outline-light" (click)="todaysPlayers()">Load Rosters</button>
+<button class="btn btn-outline-light" (click)="orderPlayers()">Order Players</button>
 
-<h2>Top Player Stats</h2>
-<div>Goals: {{ topPlayerStats.goals }}</div>
-<div>Games: {{ topPlayerStats.games }}</div>
-<div>powerPlayGoals: {{ topPlayerStats.powerPlayGoals }}</div>
-<div>goalsPerGame: {{ topPlayerStats.goalsPerGame }}</div>
-
-<h2>Worst Player Stats</h2>
-<div>Goals: {{ worstPlayerStats.goals }}</div>
-<div>Games: {{ worstPlayerStats.games }}</div>
-<div>powerPlayGoals: {{ worstPlayerStats.powerPlayGoals }}</div>
-<div>goalsPerGame: {{ worstPlayerStats.goalsPerGame }}</div>
-
-<h2>Top Team Stats</h2>
-<div>penaltyKillOpportunities: {{ topTeamStats.penaltyKillOpportunities }}</div>
-<div>penaltyKillPercentage: {{ topTeamStats.penaltyKillPercentage }}</div>
-<div>goalsAgainstPerGame: {{ topTeamStats.goalsAgainstPerGame }}</div>
-
-<h2>Worst Team Stats</h2>
-<div>penaltyKillOpportunities: {{ worstTeamStats.penaltyKillOpportunities }}</div>
-<div>penaltyKillPercentage: {{ worstTeamStats.penaltyKillPercentage }}</div>
-<div>goalsAgainstPerGame: {{ worstTeamStats.goalsAgainstPerGame }}</div>
+<mat-expansion-panel hideToggle class="statistics-panel">
+  <mat-expansion-panel-header>
+    <mat-panel-title class="text-light">
+      Statistics
+    </mat-panel-title>
+    <mat-panel-description class="text-light">
+      Used for normalization
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <mat-accordion class="accordion accordion-flush" multi>
+    <mat-expansion-panel hideToggle class="sub-statistics-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="text-light">
+          Top Player Stats
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="text-light">
+        <div>Goals: {{ topPlayerStats.goals }}</div>
+        <div>Games: {{ topPlayerStats.games }}</div>
+        <div>PowerPlay Goals: {{ topPlayerStats.powerPlayGoals }}</div>
+        <div>Goals Per Game: {{ topPlayerStats.goalsPerGame }}</div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel hideToggle class="sub-statistics-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="text-light">
+          Worst Player Stats
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="text-light">
+        <div>Goals: {{ worstPlayerStats.goals }}</div>
+        <div>Games: {{ worstPlayerStats.games }}</div>
+        <div>PowerPlay Goals: {{ worstPlayerStats.powerPlayGoals }}</div>
+        <div>Goals Per Game: {{ worstPlayerStats.goalsPerGame }}</div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel hideToggle class="sub-statistics-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="text-light">
+          Top Team Stats
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="text-light">
+        <div>penaltyKillOpportunities: {{ topTeamStats.penaltyKillFrequency }}</div>
+        <div>penaltyKillPercentage: {{ topTeamStats.penaltyKillPercentage }}</div>
+        <div>goalsAgainstPerGame: {{ topTeamStats.goalsAgainstPerGame }}</div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel hideToggle class="sub-statistics-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="text-light">
+          Worst Team Stats
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="text-light">
+        <div>penaltyKillOpportunities: {{ worstTeamStats.penaltyKillFrequency }}</div>
+        <div>penaltyKillPercentage: {{ worstTeamStats.penaltyKillPercentage }}</div>
+        <div>goalsAgainstPerGame: {{ worstTeamStats.goalsAgainstPerGame }}</div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</mat-expansion-panel>
 
 <table id="prediction-data">
   <tr>
     <th>Overall Ranking</th>
     <th>Player</th>
+    <th>Team</th>
     <th>Score</th>
     <th>PlayerId</th>
   </tr>
   <tr *ngFor="let player of orderedPlayers; let i = index">
     <td>{{ i + 1 }}</td>
     <td>{{ player.name }}</td>
+    <td>{{ player.playsFor.name }}</td>
     <td>{{ player.goalLikelihoodRank }}</td>
     <td>{{ player.id }}</td>
   </tr>

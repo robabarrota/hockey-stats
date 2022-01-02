@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Game } from 'src/app/Models/Game';
 import { Player } from 'src/app/Models/Player';
-import { PlayerRankings } from 'src/app/Models/PlayerRankings';
 import { Roster } from 'src/app/Models/Roster';
 import { PlayerStat } from 'src/app/Models/PlayerStat';
 import { Team } from 'src/app/Models/Team';
@@ -9,12 +8,9 @@ import { WeightedStats } from 'src/app/Models/WeightedStats';
 import { PlayerService } from 'src/app/Services/player/player.service';
 import { TeamService } from 'src/app/Services/team/team.service';
 import weightedStatsJson from '../../../assets/weightedStats.json';
-import { TeamRankings } from 'src/app/Models/TeamRankings';
 import * as XLSX from 'xlsx'; 
 import { formatDate } from '@angular/common';
 import { TeamStat } from 'src/app/Models/TeamStat';
-
-
 
 @Component({
   selector: 'app-top-scorers',
@@ -118,7 +114,7 @@ export class TopScorersComponent implements OnInit {
       var teams : any[] = rostersResponse.teams;
       teams.forEach(team => {
         var thisGame = this.games.filter((game) => game.homeTeam.id === team.id || game.awayTeam.id === team.id)[0];
-        var opposingTeam = thisGame.homeTeam.id === team.id ? thisGame.awayTeam.id : thisGame.homeTeam.id;
+        var opposingTeam : Team = thisGame.homeTeam.id === team.id ? thisGame.awayTeam : thisGame.homeTeam;
         var roster: Roster = {
           team: {
             id: team.id,
@@ -132,19 +128,24 @@ export class TopScorersComponent implements OnInit {
         teamRoster.forEach(rosterSpot => {
           var playerId = rosterSpot.person.id;
           var playerName = rosterSpot.person.fullName;
-          var playerStatsresp;
-          this.playerService.getPlayerStats(playerId).subscribe((playerStatsResponse: any) => playerStatsresp = playerStatsResponse, () => {}, () => {
-            var playerStat: PlayerStat = playerStatsresp.stats[0].splits.length === 0 ? new PlayerStat() : playerStatsresp.stats[0].splits[0].stat;
-            var player: Player = {
-              id: playerId,
-              name: playerName,
-              stats: playerStat,
-              goalLikelihoodRank: -1,
-              playingAgainst: opposingTeam
-            };
-            this.calculateGoalLikelihood(player);
-            roster.players.push(player);
-            this.orderedPlayers.push(player);
+          var playerSeasonStatsresp, playerPlayoffStatsresp;
+          this.playerService.getPlayerSeasonStats(playerId).subscribe((playerSeasonStatsResponse: any) => playerSeasonStatsresp = playerSeasonStatsResponse, () => {}, () => {
+            var playerSeasonStat: PlayerStat = playerSeasonStatsresp.stats[0].splits.length === 0 ? new PlayerStat() : playerSeasonStatsresp.stats[0].splits[0].stat;
+            this.playerService.getPlayerPlayoffStats(playerId).subscribe((playerPlayoffStatsResponse: any) => playerPlayoffStatsresp = playerPlayoffStatsResponse, () => {}, () => {
+              var playerPlayoffStat: PlayerStat = playerPlayoffStatsresp.stats[0].splits.length === 0 ? new PlayerStat() : playerPlayoffStatsresp.stats[0].splits[0].stat;
+              var player: Player = {
+                id: playerId,
+                name: playerName,
+                seasonStats: playerSeasonStat,
+                //playoffStats: playerPlayoffStat,
+                goalLikelihoodRank: -1,
+                playingAgainst: opposingTeam,
+                playsFor: team
+              };
+              this.calculateGoalLikelihood(player);
+              roster.players.push(player);
+              this.orderedPlayers.push(player);
+            });
           });
         });
         rosters.push(roster);
@@ -174,24 +175,35 @@ export class TopScorersComponent implements OnInit {
   }
 
   calculateGoalLikelihood(player: Player) {
-    var playerStatsResp
+    var playerSeasonStatsResp, playerPlayoffStatsResp;
     
-    this.playerService.getPlayerStats(player.id).subscribe((playerStatsResponse: any) => playerStatsResp = playerStatsResponse, () => {}, () => {
-      if (playerStatsResp.stats[0].splits[0] !== undefined) {
-        var playerStats = playerStatsResp.stats[0].splits[0].stat;
-        if (player.id === 8478401 || player.id === 8475166) {
-          console.log(player.name);
+    this.playerService.getPlayerSeasonStats(player.id).subscribe((playerSeasonStatsResponse: any) => playerSeasonStatsResp = playerSeasonStatsResponse, () => {}, () => {
+      this.playerService.getPlayerPlayoffStats(player.id).subscribe((playerPlayoffStatsResponse: any) => playerPlayoffStatsResp = playerPlayoffStatsResponse, () => {}, () => {
+        console.log("here");
+        // if (playerSeasonStatsResp.stats[0].splits[0] !== undefined && playerPlayoffStatsResp.stats[0].splits[0] !== undefined) {
+        if (playerSeasonStatsResp.stats[0].splits[0] !== undefined) {
+          console.log("there");
+          var playerSeasonStats = playerSeasonStatsResp.stats[0].splits[0].stat;
+          //var playerPlayoffStats = playerPlayoffStatsResp.stats[0].splits[0].stat;
+          // var playerTotalGoals = playerSeasonStats.goals || 0 + playerPlayoffStats.goals || 0 ;
+          // var playerTotalGames = playerSeasonStats.games || 0  + playerPlayoffStats.games || 0 ;
+          // var playerTotalPPG = playerSeasonStats.powerPlayGoals || 0  + playerPlayoffStats.powerPlayGoals || 0 ;
+
+          var playerTotalGoals = playerSeasonStats.goals || 0;
+          var playerTotalGames = playerSeasonStats.games || 0;
+          var playerTotalPPG = playerSeasonStats.powerPlayGoals || 0;
+          console.log(playerTotalGoals);
+          player.goalLikelihoodRank = this.getGoalsPerGameScore(playerTotalGoals, playerTotalGames)
+                                //+ this.getGeneralPlayerRank(playerStats.rankShots) *  this.getGeneralPlayerRank(playerStats.rankShotPct) * this.weightedStats.shotPercentageWeight
+                                
+                                + this.getOpposingGoalsAgainstScore(this.teams.find(team => team.id === player.playingAgainst.id).stats.goalsAgainstPerGame)
+                                + this.getPowerPlayScore(this.teams.find(team => team.id === player.playingAgainst.id).rankings.penaltyKillOpportunities, this.teams.find(team => team.id === player.playingAgainst.id).stats.penaltyKillPercentage, this.teams.find(team => team.id === player.playingAgainst.id).stats.gamesPlayed, playerTotalPPG, playerTotalGames)
+                                ;
         }
-        player.goalLikelihoodRank = this.getGoalsPerGameScore(playerStats.goals, playerStats.games)
-                              //+ this.getGeneralPlayerRank(playerStats.rankShots) *  this.getGeneralPlayerRank(playerStats.rankShotPct) * this.weightedStats.shotPercentageWeight
-                              
-                              + this.getOpposingGoalsAgainstScore(this.teams.find(team => team.id === player.playingAgainst).stats.goalsAgainstPerGame)
-                              + this.getPowerPlayScore(this.teams.find(team => team.id === player.playingAgainst).rankings.penaltyKillOpportunities, this.teams.find(team => team.id === player.playingAgainst).stats.penaltyKillPercentage, this.teams.find(team => team.id === player.playingAgainst).stats.gamesPlayed, playerStats.powerPlayGoals, playerStats.games)
-                              ;
-      }
-      else {
-        player.goalLikelihoodRank = -1;
-      }
+        else {
+          player.goalLikelihoodRank = -1;
+        }
+      });
     });
     
   }
@@ -213,19 +225,19 @@ export class TopScorersComponent implements OnInit {
 
   normalizePlayerRankValue(rankValue: number): number {
     var normalizedRankScore = (rankValue - this.minRank) / (this.maxPlayerRank - this.minRank);
-    return normalizedRankScore;
+    return !isNaN(normalizedRankScore) ? normalizedRankScore : 1;
   }
   normalizeTeamRankValue(rankValue: number): number {
     var normalizedRankScore = (rankValue - this.minRank) / (this.maxTeamRank - this.minRank);
-    return normalizedRankScore;
+    return !isNaN(normalizedRankScore) ? normalizedRankScore : 1;
   }
   normalizePlayerStatValue(playerStat: number, min: number, max: number) {
     var normalizedScore = (playerStat - min) / (max - min);
-    return normalizedScore;
+    return !isNaN(normalizedScore) ? normalizedScore : 1;
   }
   normalizeTeamStatValue(teamStat: number, min: number, max: number) {
     var normalizedScore = (teamStat - min) / (max - min);
-    return normalizedScore;
+    return !isNaN(normalizedScore) ? normalizedScore : 1;
   }
 
   getGoalsPerGameScore(goals: number, games: number): number {
@@ -307,41 +319,47 @@ export class TopScorersComponent implements OnInit {
         this.playerService.getRosters(teamIds).subscribe((rostersObs: any) => rostersResponse = rostersObs, () => {}, () => { 
           var teams : any[] = rostersResponse.teams;
           teams.forEach(team => {
-            console.log(team.name);
             var teamRoster = team.roster.roster;
             teamRoster.forEach(rosterSpot => {
               var playerId = rosterSpot.person.id;
-              var playerStatsresp;
-              this.playerService.getPlayerStats(playerId).subscribe((playerStatsResponse: any) => playerStatsresp = playerStatsResponse, () => {}, () => {
-                var playerStat: PlayerStat = playerStatsresp.stats[0].splits.length === 0 ? new PlayerStat() : playerStatsresp.stats[0].splits[0].stat;
-                var goals = playerStat.goals;
-                var games = playerStat.games;
-                var powerPlayGoals = playerStat.powerPlayGoals;
-                var goalsPerGame = goals/games;
-                
-                if (goals > this.topPlayerStats.goals) {
-                  this.topPlayerStats.goals = goals;
-                } else if (goals < this.worstPlayerStats.goals) {
-                  this.worstPlayerStats.goals = goals;
-                }
+              var playerSeasonStatsresp, playerPlayoffStatsresp;
+              this.playerService.getPlayerSeasonStats(playerId).subscribe((playerSeasonStatsResponse: any) => playerSeasonStatsresp = playerSeasonStatsResponse, () => {}, () => {
+                this.playerService.getPlayerPlayoffStats(playerId).subscribe((playerPlayoffStatsResponse: any) => playerPlayoffStatsresp = playerPlayoffStatsResponse, () => {}, () => {
+                  var playerSeasonStat: PlayerStat = playerSeasonStatsresp.stats[0].splits.length === 0 ? new PlayerStat() : playerSeasonStatsresp.stats[0].splits[0].stat;
+                  var playerPlayoffStat: PlayerStat = playerPlayoffStatsresp.stats[0].splits.length === 0 ? new PlayerStat() : playerPlayoffStatsresp.stats[0].splits[0].stat;
 
-                if (games > this.topPlayerStats.games) {
-                  this.topPlayerStats.games = games;
-                } else if (games < this.worstPlayerStats.games) {
-                  this.worstPlayerStats.games = games;
-                }
+                  // var goals = playerSeasonStat.goals + playerPlayoffStat.games == undefined ? playerPlayoffStat.games : 0;
+                  // var games = playerSeasonStat.games + playerPlayoffStat.games ? playerPlayoffStat.games : 0;
+                  // var powerPlayGoals = playerSeasonStat.powerPlayGoals + playerPlayoffStat.powerPlayGoals ? playerPlayoffStat.powerPlayGoals : 0;
+                  var goals = playerSeasonStat.goals;
+                  var games = playerSeasonStat.games;
+                  var powerPlayGoals = playerSeasonStat.powerPlayGoals;
+ 
+                  var goalsPerGame = goals/games;
+                  if (goals > this.topPlayerStats.goals) {
+                    this.topPlayerStats.goals = goals;
+                  } else if (goals < this.worstPlayerStats.goals) {
+                    this.worstPlayerStats.goals = goals;
+                  }
 
-                if (powerPlayGoals > this.topPlayerStats.powerPlayGoals) {
-                  this.topPlayerStats.powerPlayGoals = powerPlayGoals;
-                } else if (powerPlayGoals < this.worstPlayerStats.powerPlayGoals) {
-                  this.worstPlayerStats.powerPlayGoals = powerPlayGoals;
-                }
+                  if (games > this.topPlayerStats.games) {
+                    this.topPlayerStats.games = games;
+                  } else if (games < this.worstPlayerStats.games) {
+                    this.worstPlayerStats.games = games;
+                  }
 
-                if (goalsPerGame > this.topPlayerStats.goalsPerGame) {
-                  this.topPlayerStats.goalsPerGame = goalsPerGame;
-                } else if (goalsPerGame < this.worstPlayerStats.goalsPerGame) {
-                  this.worstPlayerStats.goalsPerGame = goalsPerGame;
-                }
+                  if (powerPlayGoals > this.topPlayerStats.powerPlayGoals) {
+                    this.topPlayerStats.powerPlayGoals = powerPlayGoals;
+                  } else if (powerPlayGoals < this.worstPlayerStats.powerPlayGoals) {
+                    this.worstPlayerStats.powerPlayGoals = powerPlayGoals;
+                  }
+
+                  if (goalsPerGame > this.topPlayerStats.goalsPerGame) {
+                    this.topPlayerStats.goalsPerGame = goalsPerGame;
+                  } else if (goalsPerGame < this.worstPlayerStats.goalsPerGame) {
+                    this.worstPlayerStats.goalsPerGame = goalsPerGame;
+                  }
+                });
               });
             });
           });
