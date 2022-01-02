@@ -72,6 +72,13 @@ export class TopScorersComponent implements OnInit {
     await this.getRosters();
     this.orderPlayers();
     this.dataSource.data = this.orderedPlayers;
+    this.dataSource.filterPredicate = (data, filter: string) => {
+      var formattedFilter = filter.toLowerCase().trim();
+      var name = data.name.toLowerCase().trim();
+      var team = data.playsFor.name.toLowerCase().trim();
+      var rank = data.rank.toString();
+      return name.includes(formattedFilter) || rank.includes(formattedFilter) || team.includes(formattedFilter)
+    };
     this.loading = false;
     this.loaded = true;
   }
@@ -390,6 +397,10 @@ export class TopScorersComponent implements OnInit {
         default: return 0;
       }
     });
+  }
+  
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 }
 

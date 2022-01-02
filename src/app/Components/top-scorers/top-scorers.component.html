@@ -7,6 +7,9 @@
   <!-- <button class="btn btn-outline-light header-item" (click)="orderPlayers()">Order Players</button> -->
   
   <button class="btn btn-outline-light header-item" (click)="runTheNumbers()">Run the numbers</button>
+  <mat-form-field class="header-item">
+    <input matInput class="header-item" (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+  </mat-form-field>
   <mat-spinner class="header-item" *ngIf="loading" [diameter]="30"></mat-spinner>
 </div>
 
