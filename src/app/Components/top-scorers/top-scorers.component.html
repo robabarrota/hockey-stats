@@ -1,19 +1,17 @@
 
-<div class="header-wrapper">
+<div *ngIf="loaded" class="header-wrapper">
   <button class="btn btn-outline-light header-item"(click)="exportToExcel()">Export</button>
-  <button class="btn btn-outline-light header-item" type="button" (click)="clearAll()">Clear</button>
+  <!-- <button class="btn btn-outline-light header-item" type="button" (click)="clearAll()">Clear</button> -->
   <!-- <button class="btn btn-outline-light header-item" (click)="getMaxMinData()">Load Statistics</button> -->
   <!-- <button class="btn btn-outline-light header-item" (click)="todaysPlayers()">Load Rosters</button> -->
   <!-- <button class="btn btn-outline-light header-item" (click)="orderPlayers()">Order Players</button> -->
   
-  <button class="btn btn-outline-light header-item" (click)="runTheNumbers()">Run the numbers</button>
+  <!-- <button class="btn btn-outline-light header-item" (click)="runTheNumbers()">Run the numbers</button> -->
   <mat-form-field class="header-item">
     <input matInput class="header-item" (keyup)="applyFilter($event.target.value)" placeholder="Filter">
   </mat-form-field>
-  <mat-spinner class="header-item" *ngIf="loading" [diameter]="30"></mat-spinner>
 </div>
-
-
+<loading-bar *ngIf="loading"></loading-bar>
 <mat-table *ngIf="loaded" id="prediction-data" [dataSource]="dataSource" matSort multiTemplateDataRows (matSortChange)="sortData($event)">
   <ng-container matColumnDef="rank">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Overall Ranking </mat-header-cell>

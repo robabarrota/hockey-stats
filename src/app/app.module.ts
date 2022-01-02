@@ -9,13 +9,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppMaterialModule } from './app-material/app-material.module';
 import { PlayerDetailsComponent } from './Components/player-details/player-details.component';
 import { TeamDetailsComponent } from './Components/team-details/team-details.component';
+import { LoadingBarComponent } from './Components/loading-bar/loading-bar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TopScorersComponent,
     PlayerDetailsComponent,
-    TeamDetailsComponent
+    TeamDetailsComponent,
+    LoadingBarComponent
   ],
   imports: [
     BrowserModule,
