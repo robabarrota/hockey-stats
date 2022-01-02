@@ -1,11 +1,13 @@
 <button class="btn btn-outline-light"(click)="exportToExcel()">Export</button>
 <button class="btn btn-outline-light" type="button" (click)="clearAll()">Clear</button>
-<button class="btn btn-outline-light" (click)="getMaxMinData()">Load Statistics</button>
-<button class="btn btn-outline-light" (click)="todaysPlayers()">Load Rosters</button>
+<!-- <button class="btn btn-outline-light" (click)="getMaxMinData()">Load Statistics</button> -->
+<!-- <button class="btn btn-outline-light" (click)="todaysPlayers()">Load Rosters</button> -->
 <button class="btn btn-outline-light" (click)="orderPlayers()">Order Players</button>
 
-{{loadingStatistics}}
-<mat-expansion-panel hideToggle class="statistics-panel">
+<button class="btn btn-outline-light" (click)="runTheNumbers()">Run the numbers</button>
+
+
+<!-- <mat-expansion-panel hideToggle class="statistics-panel">
   <mat-expansion-panel-header>
     <mat-panel-title class="text-light">
       Statistics
@@ -66,7 +68,7 @@
       </div>
     </mat-expansion-panel>
   </mat-accordion>
-</mat-expansion-panel>
+</mat-expansion-panel> -->
 
 <table id="prediction-data">
   <tr>
