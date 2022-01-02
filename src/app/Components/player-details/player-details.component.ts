@@ -3,11 +3,11 @@ import { MatTableDataSource } from '@angular/material';
 import { Player } from 'src/app/Models/Player';
 
 @Component({
-  selector: 'expanded-details',
-  templateUrl: './expanded-details.component.html',
-  styleUrls: ['./expanded-details.component.scss']
+  selector: 'player-details',
+  templateUrl: './player-details.component.html',
+  styleUrls: ['./player-details.component.scss']
 })
-export class ExpandedDetailsComponent implements OnInit {
+export class PlayerDetailsComponent implements OnInit {
   seasonStatColumns = ["key", "value"];
   dataSource: MatTableDataSource<any> = new MatTableDataSource([]);
 
