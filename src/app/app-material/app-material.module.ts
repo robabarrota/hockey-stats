@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatExpansionModule } from '@angular/material';
+import { MatExpansionModule, MatProgressSpinnerModule } from '@angular/material';
 
 
 
@@ -8,8 +8,9 @@ import { MatExpansionModule } from '@angular/material';
   declarations: [],
   imports: [
     MatExpansionModule,
+    MatProgressSpinnerModule,
     CommonModule
   ],
-  exports: [MatExpansionModule]
+  exports: [MatExpansionModule, MatProgressSpinnerModule]
 })
 export class AppMaterialModule { }

@@ -15,6 +15,17 @@
     background-color: #fb776c;
 }
 
-th {
+th, ::ng-deep td {
     font-weight: normal;
+    padding: 2px 15px;
+}
+
+.header-wrapper {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+}
+
+.header-item {
+    margin: 5px;
 }

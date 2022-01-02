@@ -1,11 +1,14 @@
-<button class="btn btn-outline-light"(click)="exportToExcel()">Export</button>
-<button class="btn btn-outline-light" type="button" (click)="clearAll()">Clear</button>
-<!-- <button class="btn btn-outline-light" (click)="getMaxMinData()">Load Statistics</button> -->
-<!-- <button class="btn btn-outline-light" (click)="todaysPlayers()">Load Rosters</button> -->
-<!-- <button class="btn btn-outline-light" (click)="orderPlayers()">Order Players</button> -->
 
-<button class="btn btn-outline-light" (click)="runTheNumbers()">Run the numbers</button>
-
+<div class="header-wrapper">
+  <button class="btn btn-outline-light header-item"(click)="exportToExcel()">Export</button>
+  <button class="btn btn-outline-light header-item" type="button" (click)="clearAll()">Clear</button>
+  <!-- <button class="btn btn-outline-light header-item" (click)="getMaxMinData()">Load Statistics</button> -->
+  <!-- <button class="btn btn-outline-light header-item" (click)="todaysPlayers()">Load Rosters</button> -->
+  <!-- <button class="btn btn-outline-light header-item" (click)="orderPlayers()">Order Players</button> -->
+  
+  <button class="btn btn-outline-light header-item" (click)="runTheNumbers()">Run the numbers</button>
+  <mat-spinner class="header-item" *ngIf="loading" [color]="primary" [diameter]="30"></mat-spinner>
+</div>
 
 <!-- <mat-expansion-panel hideToggle class="statistics-panel">
   <mat-expansion-panel-header>
@@ -70,7 +73,7 @@
   </mat-accordion>
 </mat-expansion-panel> -->
 
-<table id="prediction-data">
+<table *ngIf="loaded" id="prediction-data">
   <tr>
     <th>Overall Ranking</th>
     <th>Player</th>

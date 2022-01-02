@@ -30,6 +30,8 @@ export class TopScorersComponent implements OnInit {
   worstPlayerStats: PlayerStat = new PlayerStat();
   topTeamStats: TeamStat = new TeamStat();
   worstTeamStats: TeamStat = new TeamStat();
+  loading = false;
+  loaded = false;
 
   constructor(private playerService: PlayerService, private teamService: TeamService) { }
 
@@ -62,9 +64,12 @@ export class TopScorersComponent implements OnInit {
   }
 
   async runTheNumbers() {
+    this.loading = true;
     await this.getMaxMinData();
     await this.getRosters();
     this.orderPlayers();
+    this.loading = false;
+    this.loaded = true;
   }
 
   todaysPlayers() {
@@ -155,6 +160,7 @@ export class TopScorersComponent implements OnInit {
     this.teams = [];
     this.rosters = [];
     this.orderedPlayers = [];
+    this.loaded = false;
   }
 
   orderPlayers() {
