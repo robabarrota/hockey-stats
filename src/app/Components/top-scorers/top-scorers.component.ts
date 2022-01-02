@@ -73,6 +73,7 @@ export class TopScorersComponent implements OnInit {
       powerPlayGoals: 99999,
       goalsPerGame: 99999
     };
+    this.runTheNumbers();
   }
 
   async runTheNumbers() {

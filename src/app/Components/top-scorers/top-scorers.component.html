@@ -39,7 +39,7 @@
     <mat-cell *matCellDef="let element;" [attr.colspan]="displayedColumns.length">
       <div class="expanded-element-detail"
            [@detailExpand]="element.name == expandedElement?.name ? 'expanded' : 'collapsed'">
-           <expanded-details [player]="element"></expanded-details>
+           <player-details [player]="element"></player-details>
       </div>
     </mat-cell>
   </ng-container>
