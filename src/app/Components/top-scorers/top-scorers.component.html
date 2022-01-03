@@ -30,7 +30,7 @@
 
   <ng-container matColumnDef="score">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Score </mat-header-cell>
-    <mat-cell *matCellDef="let element;"> {{element.goalLikelihoodRank}} </mat-cell>
+    <mat-cell *matCellDef="let element;"> {{+element.goalLikelihoodRank.toFixed(4)}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="expandedDetail">
