@@ -8,3 +8,7 @@ body {
     background-color: #162b32;
     color:white;
 }
+
+mat-cell, mat-header-cell {
+    padding:  0 0.5em;
+}
