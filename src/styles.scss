@@ -9,6 +9,16 @@ body {
     color:white;
 }
 
-mat-cell, mat-header-cell {
-    padding:  0 0.5em;
+mat-cell, mat-footer-cell, mat-header-cell {
+    padding: 0 0.25em;
+}
+
+mat-cell:first-of-type, mat-footer-cell:first-of-type, mat-header-cell:first-of-type {
+    padding-left: 24px;
+    padding-right: 0.25em;
+}
+
+mat-cell:last-of-type, mat-footer-cell:last-of-type, mat-header-cell:last-of-type {
+    padding-right: 24px;
+    padding-left: 0.25em;
 }

@@ -1,21 +1,30 @@
-<mat-table [dataSource]="dataSource" style="width: 100%">
-    <ng-container matColumnDef="key">
-        <mat-cell *matCellDef="let element;"> {{element.key}} </mat-cell>
+
+<mat-table [dataSource]="statsDataSource" style="width: 100%">
+    <ng-container matColumnDef="statKey">
+        <mat-cell *matCellDef="let element;"> {{element.statKey}} </mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="value">
-        <mat-cell *matCellDef="let element;"> {{element.value}} </mat-cell>
+    <ng-container matColumnDef="statValue">
+        <mat-cell *matCellDef="let element;" class="value-column"> {{element.statValue}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="rankKey">
+        <mat-cell *matCellDef="let element;"> {{element.rankKey}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="rankValue">
+        <mat-cell *matCellDef="let element;" class="value-column"> {{element.rankValue}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="header-row-title">
-        <mat-header-cell *matHeaderCellDef [attr.colspan]="2"> Opposing Team Stats</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef [attr.colspan]="2"> Opposing Team - {{team.name}} </mat-header-cell>
     </ng-container>
 
     <ng-container matColumnDef="header-row-subtitle">
-        <mat-header-cell *matHeaderCellDef [attr.colspan]="2"> {{team.name}}</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef [attr.colspan]="2"> Opposing Team Stats </mat-header-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="['header-row-title']"></mat-header-row>
     <mat-header-row *matHeaderRowDef="['header-row-subtitle']"></mat-header-row>
-    <mat-row *matRowDef="let element; columns: teamStatColumns;"></mat-row>
-</mat-table>
+    <mat-row *matRowDef="let element; columns: columns;"></mat-row>
+</mat-table>   

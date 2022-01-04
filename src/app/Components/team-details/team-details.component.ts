@@ -8,21 +8,23 @@ import { Team } from 'src/app/Models/Team';
   styleUrls: ['./team-details.component.scss']
 })
 export class TeamDetailsComponent implements OnInit {
-  teamStatColumns = ["key", "value"];
-  dataSource: MatTableDataSource<any> = new MatTableDataSource([]);
+  columns = ["statKey", "statValue", "rankKey", "rankValue"];
+  statsDataSource: MatTableDataSource<any> = new MatTableDataSource([]);
 
   @Input() team: Team;
   constructor() { }
 
   ngOnInit() {
-    var data = [
-      {key: "Games Played", value: this.team.stats.gamesPlayed},
-      {key: "Goals Against Per Game", value: this.team.stats.goalsAgainstPerGame},
-      {key: "Penalty Kill Percentage", value: this.team.stats.penaltyKillPercentage}
+    var statsData = [
+      {statKey: "Goals Against Per Game", statValue: this.team.stats.goalsAgainstPerGame, rankKey: "Goals Against Per Game", rankValue: this.team.rankings.goalsAgainstPerGame},
+      {statKey: "PK%", statValue: this.team.stats.penaltyKillPercentage, rankKey: "Times Shorthanded", rankValue: this.team.rankings.penaltyKillOpportunities},
+      {rankKey: "PK%", rankValue: this.team.rankings.penaltyKillPercentage}
+
     ];
-    this.dataSource.data = data;
-    // for (const key in this.team.stats) {
-    //   this.dataSource.data.push({key, value: this.team.stats[key]});
+
+    this.statsDataSource.data = statsData;
+    // for (const key in this.team.rankings) {
+    //   this.rankingsDataSource.data.push({key, value: this.team.rankings[key]});
     // }
   }
 
