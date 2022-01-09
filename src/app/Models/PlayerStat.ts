@@ -27,4 +27,5 @@ export class PlayerStat {
     shortHandedTimeOnIcePerGame?: string;
     powerPlayTimeOnIcePerGame?: string;
     goalsPerGame: number;
+    getGoalsPerGameScore: number;
 }
