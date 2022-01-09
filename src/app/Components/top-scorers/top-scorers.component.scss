@@ -92,3 +92,19 @@
         padding: 4px;
     }
 }
+
+.table-padding {
+    padding-bottom: 53px;
+}
+.keep-bottom {
+    position: fixed;
+    bottom: 0;
+    background-color: #162b32;
+    width: 100%;
+    padding: 1%;
+    align-items: center;
+}
+
+.page-body {
+    height: 90%;
+}

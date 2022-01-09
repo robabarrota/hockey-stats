@@ -1,62 +1,62 @@
-<div *ngIf="loaded" class="header-wrapper">
-  <!-- <button class="btn btn-outline-light header-item"(click)="exportToExcel()">Export</button> -->
-  <!-- <button class="btn btn-outline-light header-item" type="button" (click)="clearAll()">Clear</button> -->
-  <!-- <button class="btn btn-outline-light header-item" (click)="getMaxMinData()">Load Statistics</button> -->
-  <!-- <button class="btn btn-outline-light header-item" (click)="todaysPlayers()">Load Rosters</button> -->
-  <!-- <button class="btn btn-outline-light header-item" (click)="orderPlayers()">Order Players</button> -->
+<div class="page-body">
+  <div *ngIf="loaded" class="header-wrapper">
+    <!-- <button class="btn btn-outline-light header-item"(click)="exportToExcel()">Export</button> -->
+    <!-- <button class="btn btn-outline-light header-item" type="button" (click)="clearAll()">Clear</button> -->
+    <!-- <button class="btn btn-outline-light header-item" (click)="getMaxMinData()">Load Statistics</button> -->
+    <!-- <button class="btn btn-outline-light header-item" (click)="todaysPlayers()">Load Rosters</button> -->
+    <!-- <button class="btn btn-outline-light header-item" (click)="orderPlayers()">Order Players</button> -->
 
-  <!-- <button class="btn btn-outline-light header-item" (click)="runTheNumbers()">Run the numbers</button> -->
-  <div class="h2">Farmer's Wraps Please <mat-icon style="color: red">fastfood</mat-icon>
+    <!-- <button class="btn btn-outline-light header-item" (click)="runTheNumbers()">Run the numbers</button> -->
+    <div class="h2">Farmer's Wraps Please <mat-icon style="color: red">fastfood</mat-icon>
+    </div>
+    <mat-form-field class="header-item">
+      <input matInput class="header-item" (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
   </div>
-  <mat-form-field class="header-item">
-    <input matInput class="header-item" (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-  </mat-form-field>
+  <loading-bar *ngIf="loading"></loading-bar>
+  <mat-table *ngIf="loaded" id="prediction-data" [dataSource]="dataSource" matSort multiTemplateDataRows
+    (matSortChange)="sortData($event)" class="table-padding">
+    <ng-container matColumnDef="rank">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Overall Ranking </mat-header-cell>
+      <mat-cell *matCellDef="let element;"> {{element.rank}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="player">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Player </mat-header-cell>
+      <mat-cell *matCellDef="let element;"> {{element.name}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="team">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Team </mat-header-cell>
+      <mat-cell *matCellDef="let element;"> {{element.playingFor.name}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="score">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Score </mat-header-cell>
+      <mat-cell *matCellDef="let element;"> {{+element.goalLikelihoodRank.toFixed(4)}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="expandedDetail">
+      <mat-cell *matCellDef="let element;" [attr.colspan]="displayedColumns.length">
+        <div *ngIf="element.name == expandedElement?.name" class="expanded-element-detail"
+          [@detailExpand]="element.name == expandedElement?.name ? 'expanded' : 'collapsed'">
+          <player-details class="details-table" [player]="element"></player-details>
+          <team-details class="details-table" [team]="element.playingAgainst"></team-details>
+        </div>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let element; let i = dataIndex; columns: displayedColumns;" matRipple
+      [ngClass]="{'element-row': true, 'alt-row': i % 2 == 0}"
+      [class.expanded-row]="expandedElement?.name === element.name"
+      (click)="expandedElement = expandedElement?.name === element.name ? null : element"></mat-row>
+    <mat-row *matRowDef="let element; columns: ['expandedDetail'];" class="detail-row"></mat-row>
+  </mat-table>
 </div>
-<loading-bar *ngIf="loading"></loading-bar>
-<mat-table *ngIf="loaded" id="prediction-data" [dataSource]="dataSource" matSort multiTemplateDataRows
-  (matSortChange)="sortData($event)">
-  <ng-container matColumnDef="rank">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> Overall Ranking </mat-header-cell>
-    <mat-cell *matCellDef="let element;"> {{element.rank}} </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="player">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> Player </mat-header-cell>
-    <mat-cell *matCellDef="let element;"> {{element.name}} </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="team">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> Team </mat-header-cell>
-    <mat-cell *matCellDef="let element;"> {{element.playingFor.name}} </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="score">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> Score </mat-header-cell>
-    <mat-cell *matCellDef="let element;"> {{+element.goalLikelihoodRank.toFixed(4)}} </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="expandedDetail">
-    <mat-cell *matCellDef="let element;" [attr.colspan]="displayedColumns.length">
-      <div *ngIf="element.name == expandedElement?.name" class="expanded-element-detail"
-        [@detailExpand]="element.name == expandedElement?.name ? 'expanded' : 'collapsed'">
-        <player-details class="details-table" [player]="element"></player-details>
-        <team-details class="details-table" [team]="element.playingAgainst"></team-details>
-      </div>
-    </mat-cell>
-  </ng-container>
-
-  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let element; let i = dataIndex; columns: displayedColumns;" matRipple
-    [ngClass]="{'element-row': true, 'alt-row': i % 2 == 0}"
-    [class.expanded-row]="expandedElement?.name === element.name"
-    (click)="expandedElement = expandedElement?.name === element.name ? null : element"></mat-row>
-  <mat-row *matRowDef="let element; columns: ['expandedDetail'];" class="detail-row"></mat-row>
-</mat-table>
-
-<footer class="page-footer font-small d-flex justify-content-around">
+<footer class="page-footer font-small d-flex justify-content-around keep-bottom">
 
   <div>Robert Abarrota</div>
-  <div>Scoring Potential</div>
   <div>v{{currentVersion}}</div>
 
 </footer>
