@@ -1,12 +1,5 @@
 <div class="page-body">
   <div *ngIf="loaded" class="header-wrapper">
-    <!-- <button class="btn btn-outline-light header-item"(click)="exportToExcel()">Export</button> -->
-    <!-- <button class="btn btn-outline-light header-item" type="button" (click)="clearAll()">Clear</button> -->
-    <!-- <button class="btn btn-outline-light header-item" (click)="getMaxMinData()">Load Statistics</button> -->
-    <!-- <button class="btn btn-outline-light header-item" (click)="todaysPlayers()">Load Rosters</button> -->
-    <!-- <button class="btn btn-outline-light header-item" (click)="orderPlayers()">Order Players</button> -->
-
-    <!-- <button class="btn btn-outline-light header-item" (click)="runTheNumbers()">Run the numbers</button> -->
     <div class="h2">Farmer's Wraps Please <mat-icon style="color: red">fastfood</mat-icon>
     </div>
     <mat-form-field class="header-item">
@@ -54,9 +47,3 @@
     <mat-row *matRowDef="let element; columns: ['expandedDetail'];" class="detail-row"></mat-row>
   </mat-table>
 </div>
-<footer class="page-footer font-small d-flex justify-content-around keep-bottom">
-
-  <div>Robert Abarrota</div>
-  <div>v{{currentVersion}}</div>
-
-</footer>

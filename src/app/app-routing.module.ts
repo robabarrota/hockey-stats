@@ -1,15 +1,20 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { TopGoaliesComponent } from './Components/top-goalies/top-goalies.component';
 import { TopScorersComponent } from './Components/top-scorers/top-scorers.component';
 
 
 const routes: Routes = [
   {
-    path:'TopScorers',
+    path:'top-scorers',
     component: TopScorersComponent
   },
+  {
+    path:'top-goalies',
+    component: TopGoaliesComponent
+  },
   { path: '**',
-    redirectTo: 'TopScorers'
+    redirectTo: 'top-scorers'
   }
 
 ];

@@ -10,6 +10,9 @@ import { AppMaterialModule } from './app-material/app-material.module';
 import { PlayerDetailsComponent } from './Components/player-details/player-details.component';
 import { TeamDetailsComponent } from './Components/team-details/team-details.component';
 import { LoadingBarComponent } from './Components/loading-bar/loading-bar.component';
+import { NavbarComponent } from './Components/navbar/navbar.component';
+import { FooterComponent } from './Components/footer/footer.component';
+import { TopGoaliesComponent } from './Components/top-goalies/top-goalies.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +20,10 @@ import { LoadingBarComponent } from './Components/loading-bar/loading-bar.compon
     TopScorersComponent,
     PlayerDetailsComponent,
     TeamDetailsComponent,
-    LoadingBarComponent
+    LoadingBarComponent,
+    NavbarComponent,
+    FooterComponent,
+    TopGoaliesComponent
   ],
   imports: [
     BrowserModule,

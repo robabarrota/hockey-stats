@@ -13,8 +13,6 @@ import { formatDate } from '@angular/common';
 import { TeamStat } from 'src/app/Models/TeamStat';
 import { MatTableDataSource, Sort } from '@angular/material';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import {environment} from '../../../environments/environment';
-
 
 @Component({
   selector: 'top-scorers',
@@ -29,7 +27,6 @@ import {environment} from '../../../environments/environment';
   ]
 })
 export class TopScorersComponent implements OnInit {
-  currentVersion = environment.appVersion;
   orderedPlayers: Player[] = [];
   teams: Team[] = [];
   rosters: Roster[];
