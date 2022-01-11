@@ -13,6 +13,7 @@ import { LoadingBarComponent } from './Components/loading-bar/loading-bar.compon
 import { NavbarComponent } from './Components/navbar/navbar.component';
 import { FooterComponent } from './Components/footer/footer.component';
 import { TopGoaliesComponent } from './Components/top-goalies/top-goalies.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { TopGoaliesComponent } from './Components/top-goalies/top-goalies.compon
     HttpClientModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    AppMaterialModule
+    AppMaterialModule,
+    NgbModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
